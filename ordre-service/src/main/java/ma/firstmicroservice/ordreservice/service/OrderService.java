@@ -38,6 +38,7 @@ public class OrderService {
                 .retrieve()
                 .bodyToMono(InventoryResponse[].class)
                 .block();
+         //for passing commit
         System.out.println("Inventory response :" + inventoryResponses);
         boolean allItemsInStock = Arrays.stream(inventoryResponses).allMatch(InventoryResponse::isInStock);
         if(allItemsInStock) {
