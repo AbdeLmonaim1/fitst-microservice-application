@@ -21,6 +21,10 @@ public class OrderController {
         log.info("Saving Order");
         return "Order saved successfully";
     }
+    @GetMapping
+    public String hello() {
+        return "Hello from OrderController";
+    }
 
 
 }
