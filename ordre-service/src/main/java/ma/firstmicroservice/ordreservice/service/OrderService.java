@@ -10,9 +10,7 @@ import ma.firstmicroservice.ordreservice.repository.OrderRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 @AllArgsConstructor
@@ -38,11 +36,25 @@ public class OrderService {
                 .retrieve()
                 .bodyToMono(InventoryResponse[].class)
                 .block();
-         //for passing commit
+
         System.out.println("Inventory response :" + inventoryResponses);
+
+        List<String> skuCodeFromInventory = new ArrayList<>();
+
+        for (InventoryResponse inventoryResponse : inventoryResponses) {
+            skuCodeFromInventory.add(inventoryResponse.getSkuCode());
+        }
+        Set<String> set1 = new HashSet<>(skuCodes);
+        Set<String> set2 = new HashSet<>(skuCodeFromInventory);
+
+        boolean areEqual = set1.equals(set2);
+        System.out.println("Are the two lists equal? " + areEqual);
+
         boolean allItemsInStock = Arrays.stream(inventoryResponses).allMatch(InventoryResponse::isInStock);
-        if(allItemsInStock) {
+        if(allItemsInStock && areEqual) {
             orderRepository.save(order);
+        } else if (!areEqual) {
+            throw new IllegalArgumentException("Product is not exists in stock, please try again");
         }else {
             throw new IllegalArgumentException("Product is not available in stock, please try again");
         }
