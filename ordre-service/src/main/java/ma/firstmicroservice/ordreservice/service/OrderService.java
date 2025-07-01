@@ -17,7 +17,7 @@ import java.util.*;
 public class OrderService {
     private Mapper mapper;
     private OrderRepository orderRepository;
-    private WebClient webClient;
+    private WebClient.Builder webClientBuilder;
     public String saveOrder(OrderRequest orderRequest){
         // 1. Convert OrderRequest to Order
         Order order = new Order();
@@ -29,8 +29,8 @@ public class OrderService {
         List<String> skuCodes = order.getOrderItems().stream()
                 .map(OrderItems::getSkuCode).toList();
         //Call inventory service, and place the order if the item is in the stock
-         InventoryResponse[] inventoryResponses = webClient.get()
-                .uri("http://localhost:8082/api/inventory",
+         InventoryResponse[] inventoryResponses = webClientBuilder.build().get()
+                .uri("http://inventory-service/api/inventory",
                         uriBuilder -> uriBuilder.queryParam("skuCode", skuCodes).build()
                         )
                 .retrieve()
