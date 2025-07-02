@@ -21,6 +21,10 @@ public class InventoryController {
         log.info("Received inventory check request for skuCode: {}", skuCode);
         return inventoryService.isInStock(skuCode);
     }
+    @GetMapping("/hello")
+    public String hello() {
+        return "Hello from Inventory Controller";
+    }
 //@GetMapping("/{sku-code}")
 //@ResponseStatus(HttpStatus.OK)
 //public boolean isInStock(@PathVariable("sku-code") String skuCode) {
